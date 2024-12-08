@@ -1,11 +1,16 @@
 <?php
-    session_start();
-    include_once'./classes/database.php';
-    $db = new Database("localhost", "root", "", "hairrways");
-    $categories = $db->query("SELECT name FROM categories");
+session_start();
+include_once './classes/database.php';
+$db = new Database("localhost", "root", "", "hairrways");
 
-    $bestellers = $db -> query("SELECT * FROM products WHERE is_bestseller = TRUE");
-?><!DOCTYPE html>
+$categories = $db->query("SELECT name FROM categories");
+
+$bestellers = $db->query("SELECT * FROM products WHERE is_bestseller = TRUE");
+
+$new_arrivals = $db->query("SELECT * FROM products ORDER BY id DESC LIMIT 5");
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,8 +21,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <style>
-        
-        body{
+        body {
             font-family: 'Nunito';
         }
 
@@ -28,7 +32,7 @@
 
         .banner img {
             width: 100%;
-            height:auto;
+            height: auto;
         }
 
         .ban_text {
@@ -37,7 +41,7 @@
             left: 20px;
             padding: 20px;
             border-radius: 10px;
-            transform: translateY(-50%)
+            transform: translateY(-50%);
         }
 
         .ban_text h1 {
@@ -53,7 +57,7 @@
         }
 
         button:hover {
-            background-color:#DB92B8;
+            background-color: #DB92B8;
         }
 
         .extra h1 {
@@ -62,7 +66,7 @@
         }
 
         .hum {
-            display:flex;
+            display: flex;
             flex-direction: row;
             justify-content: center;
         }
@@ -100,12 +104,12 @@
 
         .bsts li {
             width: 220px;
-            padding:10px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             text-align: center;
             background-color: #f8f8f8;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
@@ -142,21 +146,19 @@
             text-decoration: none;
             border-radius: 5px;
             font-size: 16px;
-            margin-top:
+            margin-top: 10px;
             transition: background-color 0.3s;
         }
 
-
-        
         .subscribe {
-            display:flex;
-            align-items:center;
+            display: flex;
+            align-items: center;
             border: 1px solid #ccc;
             border-radius: 50px;
-            overflow:hidden;
+            overflow: hidden;
             width: 400px;
             background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .subscribe input {
@@ -202,7 +204,7 @@
 
         .part2 {
             background-color: #f8f8f8;
-            display:flex;
+            display: flex;
             flex-direction: row;
             gap: 45px;
             align-items: center;
@@ -227,9 +229,10 @@
 <body>
     <nav class="nbar">
         <div class="one">
-        <?php include_once("nav.inc.php"); ?>
+            <?php include_once("nav.inc.php"); ?>
         </div>
     </nav>
+
     <div class="banner">
         <img src="images/1x/banner.png" alt="a banner">
         <div class="ban_text">
@@ -238,12 +241,13 @@
             <button><a href="shop.html">Shop now</a></button>
         </div>
     </div>
+
     <div class="extra">
         <h1>All our categories</h1>
-        <div class = "hum">
-        <?php foreach ($categories as $cat): ?>
-            <h3><?php echo $cat['name']; ?></h3>
-        <?php endforeach;?>
+        <div class="hum">
+            <?php foreach ($categories as $cat): ?>
+                <h3><?php echo $cat['name']; ?></h3>
+            <?php endforeach; ?>
         </div>
     </div>
 
@@ -253,51 +257,63 @@
             <?php if ($bestellers->num_rows > 0): ?>
                 <?php foreach ($bestellers as $bestpro): ?>
                     <li>
-                    <img src="<?php echo $bestpro['image_url']; ?>" alt="<?php echo $prod['name']; ?>">
-                    <h2><?php echo $bestpro['name']; ?></h2>
-                    <h3><?php echo $bestpro['price']; ?></h3>
+                        <img src="<?php echo $bestpro['image_url']; ?>" alt="<?php echo $bestpro['name']; ?>">
+                        <h2><?php echo $bestpro['name']; ?></h2>
+                        <h3><?php echo $bestpro['price']; ?></h3>
                     </li>
                 <?php endforeach; ?>
-                <?php else: ?>
-                    <li>No bestsellers found</li>
+            <?php else: ?>
+                <li>No bestsellers found</li>
             <?php endif; ?>    
         </ul>
     </div>
-    <footer>
-    <div class = "entirety">
-        <div class="part1">
-            <h2>Keep up with the new products on the webshop!</h2>
-            <p>Receive from us tips, sales, and other interesting info once a week in your e-mailbox.</p>
-            <form class= "subscribe">
-                <input type = "email" name="email" placeholder="Enter your email">
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-        <div class="part2">
-            <div class="euh">
-                <h2>Contact</h2>
-                <h4>Overview</h4>
-                <h4>Business account</h4>
-                <h4>Account</h4>
-                <h4>Contact</h4>
-            </div>
-            <div class="euh">
-                <h2>Service</h2>
-                <h4>Garantee</h4>
-                <h4>Newsletters & Sale codes</h4>
-                <h4>Cookie overview</h4>
-                <h4>Vacancy</h4>
-            </div>
-            <div class="euh">
-                <h2>Service</h2>
-                <h4>Garantee</h4>
-                <h4>Newsletters & Sale codes</h4>
-                <h4>Cookie overview</h4>
-                <h4>Vacancy</h4>
-            </div>
-        </div>
+
+    <div class="bsts">
+        <h2>New Arrivals</h2>
+        <ul>
+            <?php if ($new_arrivals->num_rows > 0): ?>
+                <?php foreach ($new_arrivals as $newpro): ?>
+                    <li>
+                        <img src="<?php echo $newpro['image_url']; ?>" alt="<?php echo $newpro['name']; ?>">
+                        <h2><?php echo $newpro['name']; ?></h2>
+                        <h3><?php echo $newpro['price']; ?></h3>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>No new arrivals found</li>
+            <?php endif; ?>    
+        </ul>
     </div>
-    <p>©2024 all rights reserved</p>
-   </footer>
+
+    <footer>
+        <div class="entirety">
+            <div class="part1">
+                <h2>Keep up with the new products on the webshop!</h2>
+                <p>Receive from us tips, sales, and other interesting info once a week in your e-mailbox.</p>
+                <form class="subscribe">
+                    <input type="email" name="email" placeholder="Enter your email">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <div class="part2">
+                <div class="euh">
+                    <h2>Contact</h2>
+                    <h4>Overview</h4>
+                    <h4>Business account</h4>
+                    <h4>Account</h4>
+                    <h4>Contact</h4>
+                </div>
+                <div class="euh">
+                    <h2>Service</h2>
+                    <h4>Guarantee</h4>
+                    <h4>Newsletters & Sale codes</h4>
+                    <h4>Cookie overview</h4>
+                    <h4>Vacancy</h4>
+                </div>
+            </div>
+        </div>
+        <p>©2024 all rights reserved</p>
+    </footer>
 </body>
 </html>
