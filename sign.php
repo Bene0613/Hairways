@@ -30,22 +30,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <style>
     body {
+    font-family: 'Nunito';
+    padding: 0;
+    margin: 0;    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 50px;
     height: 100vh;
-    background: linear-gradient(to bottom, #632676,#bea3c6, #D8BFD8, #F5F5F5); /* From left to right */
+    background: linear-gradient(to bottom, #632676,#bea3c6, #D8BFD8, #F5F5F5); 
 }
 
 .wrap {
   background-color: white;
   width: 350px;
   height: 380px;
-  border: 1px solid;
+  border: 1px solid #301934;
   padding: 10px;
-  box-shadow: 5px 10px #D8BFD8;
+  box-shadow: 5px 10px #301934;
   border-radius: 25px;
   padding: 20px;
 }
