@@ -1,3 +1,13 @@
+<?php
+// Initialize the MySQL connection
+$conn = new mysqli("localhost", "root", "", "hairrways");
+
+// Check for connection errors
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <style>
         
         .nbar {
@@ -90,36 +100,36 @@
         }
     </style>
 <nav class="nbar">
-        <div class="one">
-           <ul>
-                <li><a href="product.php">SHOP</a></li>
-                <li><a href="bestseller.php">BESTSELLERS</a></li>
-                <li><a href="sets.php">SETS</a></li>
-                <li><a href="about.php">ABOUT US</a></li>
-            </ul>  
-        </div>
+    <div class="one">
+        <ul>
+            <li><a href="product.php">SHOP</a></li>
+            <li><a href="bestseller.php">BESTSELLERS</a></li>
+            <li><a href="sets.php">SETS</a></li>
+            <li><a href="about.php">ABOUT US</a></li>
+        </ul>  
+    </div>
 
-        <div class = "center">
-            <a href="index.php" class="logo">
+    <div class="center">
+        <a href="index.php" class="logo">
             <img src="images/1x/Middel 1.png" alt="logo">
-            </a>     
-        </div>
+        </a>     
+    </div>
            
-            <div class="two">
-            <ul>
-                <li>
+    <div class="two">
+        <ul>
+            <li>
                 <form action="" method="GET" class="searchy">
                     <input type="text" name="search" placeholder="Search for products..." required>
                     <button type="submit">Search</button>
                 </form>
             </li>
-                <li><a href="orders.php"><i class="fa-solid fa-user" style="color: #050505;"></i></a></li>
-                <?php
-                    $select_prd= mysqli_query($conn, "SELECT * from cart ") or die ('query failed');
-                    $row_count=mysqli_num_rows($select_prd);
-                    
-                ?>
-                <li><a href="cart.php"><i class="fa-solid fa-cart-shopping" style="color: #050505;"></i></a><span><sup><?php echo $row_count?></sup></span></li>
-            </ul>
-        </div>
-    </nav>
+            <li><a href="orders.php"><i class="fa-solid fa-user" style="color: #050505;"></i></a></li>
+            <?php
+                // Query for the cart items
+                $select_prd = mysqli_query($conn, "SELECT * from cart") or die('Query failed');
+                $row_count = mysqli_num_rows($select_prd);
+            ?>
+            <li><a href="cart.php"><i class="fa-solid fa-cart-shopping" style="color: #050505;"></i></a><span><sup><?php echo $row_count ?></sup></span></li>
+        </ul>
+    </div>
+</nav>

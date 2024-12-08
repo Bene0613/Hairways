@@ -1,9 +1,10 @@
 <?php
     session_start();
-     $conn = new mysqli("localhost","root","","hairrways");
-     $categories = $conn->query("SELECT name FROM categories");
+    include_once'./classes/database.php';
+    $db = new Database("localhost", "root", "", "hairrways");
+    $categories = $db->query("SELECT name FROM categories");
 
-    $bestellers = $conn -> query("SELECT * FROM products WHERE is_bestseller = TRUE");
+    $bestellers = $db -> query("SELECT * FROM products WHERE is_bestseller = TRUE");
 ?><!DOCTYPE html>
 <html lang="en">
 <head>

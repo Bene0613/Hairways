@@ -1,6 +1,5 @@
-<?php
+<?php 
 session_start();
-
 //if ($_SESSION['usertype'] != 'admin') {
     //header("Location: login.php");
     //exit();
@@ -8,23 +7,28 @@ session_start();
 //
 
 
-$conn = new mysqli("localhost","root","","hairrways");
-$categories = $conn ->query("SELECT id, name FROM categories");
+include_once'./classes/database.php';
+$db = new Database("localhost", "root", "", "hairrways");
+$categories = $db ->query("SELECT id, name FROM categories");
 
-if(!empty($_POST)){
+if (isset($_POST['add_prd'])) {
     $pname = $_POST['product_name'];
     $desc = $_POST['description'];
     $price = $_POST['price'];
-    $imageurl = $_POST['url'];
+    $image = $_FILES['image'];
+    $image_tmp_name = $image['tmp_name'];
+    $image_folder = 'images/1x/' . basename($image['name']);  
     $category_id = $_POST['category'];
 
-    $query = $conn ->query("INSERT INTO products (name, description, price, image_url, category_id) VALUES ('".$conn->real_escape_string($pname)."','".$conn->real_escape_string($desc)."','".$conn->real_escape_string($price)."','".$conn->real_escape_string($imageurl)."','".$conn->real_escape_string($category_id)."')");
+    // Prepare the SQL query
+    $stmt = $db->prepare("INSERT INTO products (name, description, price, image_url, category_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssdsi", $pname, $desc, $price, $image_folder, $category_id); 
 
-    if($query) {
-        header("Location: product.php");
-        exit();
+    if($stmt->execute()) {
+        move_uploaded_file($image_tmp_name, $image_folder);
+        $display_message= "Product inserted successfully";
     } else {
-        echo "error";
+        $display_message= "There is some error inserting product";
     }
 }
 ?><!DOCTYPE html>
@@ -81,27 +85,27 @@ if(!empty($_POST)){
 
         .around {
             display: flex;
+            flex-direction:column;
+            align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        .wrap {
-            background-color: white;
-            padding: 20px;
+            padding: 30px;
+            margin: 20px auto;
+            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 400px;
+            width: 90%;
+            max-width: 500px;
             border: 1px solid #D8BFD8;
         }
 
-        .wrap h2 {
+        .around h3 {
             color: #301934;
             margin-bottom: 20px;
             font-size: 1.5rem;
             text-align: center;
         }
 
-        .wrap button {
+        .submit_btn {
             width: 100%;
             padding: 10px;
             background-color: #301934;
@@ -111,7 +115,7 @@ if(!empty($_POST)){
             cursor: pointer;
         }
 
-        .wrap input, .wrap textarea, .wrap select {
+        .around input, .around textarea, .around select {
             width: 100%;
             padding:10px;
             margin-bottom: 15px;
@@ -120,8 +124,25 @@ if(!empty($_POST)){
             font-size: 1rem;
         }
 
-        .wrap button:hover {
+        .submit_btn:hover {
             background-color: #A77BB3;
+        }
+        .display_msg {
+            position: relative;
+            background-color: #28a745;
+            color:white;
+            padding: 35px;
+            font-size: 16px;
+            text-align: center;µ
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .display_msg i {
+            position:absolute;
+            top: 5px;
+            right: 10px;
         }
 
         footer {
@@ -151,34 +172,35 @@ if(!empty($_POST)){
         </div>
     </nav>
 
-    <h1>Add a new product</h1>
     <div class="around">
-        <div class="wrap">
-            <h2>Product details</h2>
-            <form action="" method="POST">
-            <label for="product_name"> Name of the product</label>
-                <input type="text" id="prd_name" name="product_name" required>
+        <?php if (isset($display_message)) : ?>
+        <div class="display_msg">
+            <span><?php echo htmlspecialchars($display_message); ?></span>
+            <i class="fas fa-times" onClick="this.parentElement.style.display = 'none';"></i>
+        </div>
+        <?php endif; ?>
+        
+        <section>
+            <h3 class="heading">Add a new product</h3>
+            <form action=""class="prd+" method="POST" enctype="multipart/form-data">
+                <input type="text" name="product_name" placeholder="Enter product name" class="inputField" required>
 
-                <label for="description"> Description of the product</label>
-                <input type="text" id="desc" name="description" required>
+                <input type="text" name="description" placeholder="Enter product description" class="inputField" required>
 
-                <label for="price"> Price (unity) </label>
-                <input type="number" id="price" name="price" step="0.01" min="0" required>
+                <input type="number" name="price" min="0" step="0.01" class="inputField" placeholder="Enter product price" class="inputField"  required>
 
-                <label for="image"> Add an image </label>
-                <input type="url" id="url" name="url" required>
+                <input type="file" name="image" required accept="images/png, images/jpg, images/webp" class="inputField">
 
-                <label for="category"> Category</label>
-                <select id="category" name="category" required>
+                <select class="category" name="category" placeholder="Category" required>
                     <?php while ($cat = $categories -> fetch_assoc()): ?>
                     <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
                    <?php endwhile; ?> 
                 </select>
 
-                <button type="submit"> Add</button>
+                <input type="submit" name="add_prd" class="submit_btn" value="Add product" >
             </form>
-        </div>
+        </section>
     </div>
     <footer>©2024 all rights reserved</footer>
 </body>
-</html>
+</html> "

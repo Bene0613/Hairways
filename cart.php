@@ -1,32 +1,35 @@
 <?php
 session_start();
-$conn = new mysqli("localhost","root","","hairrways");
+include_once'./classes/database.php';
+$db = new Database("localhost", "root", "", "hairrways");
 
-//update query
-if(isset($_POST['updatePrdQuanti'])) {
-    $update_value=$_POST['updateQuantity'];
-    //  echo $update_value;
-    $update_id= $_POST['updateQUantiId'];
-    //echo $update_id; 
-    //query
-    $update_quantity=mysqli_query($conn, "UPDATE cart set
-    quantity=$update_value where id=$update_id");
-    
-    if($update_quantity) {
-        header('location: cart.php');
+// Handle Update Quantity
+if (isset($_POST['updatePrdQuanti'])) {
+    $update_value = $_POST['updateQuantity'];
+    $update_id = $_POST['updateQUantiId'];
+
+    // Update query
+    $update_query = "UPDATE cart SET quantity=$update_value WHERE id=$update_id";
+    if ($db->query($update_query)) {
+        header('Location: cart.php');
+        exit();
     }
 }
 
-if(isset($_GET['remove'])) {
-    $remove_id=$_GET['remove'];
-    //echo $remove_id;
-    mysqli_query($conn, "DELETE from cart where id=$remove_id");
+// Handle Remove Item
+if (isset($_GET['remove'])) {
+    $remove_id = $_GET['remove'];
+    $remove_query = "DELETE FROM cart WHERE id=$remove_id";
+    $db->query($remove_query);
 }
 
-if(isset($_GET['delete_all'])) {
-    mysqli_query($conn, "DELETE  from cart");
-    header('location: cart.php');
+// Handle Remove All Items
+if (isset($_GET['delete_all'])) {
+    $db->query("DELETE FROM cart");
+    header('Location: cart.php');
+    exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

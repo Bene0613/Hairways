@@ -1,6 +1,7 @@
 <?php
     session_start();
-    $conn = new mysqli("localhost","root","","hairrways");
+    include_once'./classes/database.php';
+    $db = new Database("localhost", "root", "", "hairrways");
 ?><!DOCTYPE html>
 <html lang="en">
 <head>

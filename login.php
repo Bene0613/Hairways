@@ -1,38 +1,51 @@
 <?php
-        $conn = new mysqli("localhost","root","","hairrways");
+        session_start();
+        include_once'./classes/database.php';
+        $db = new Database("localhost", "root", "", "hairrways");
+
+        $error_message = "";
 
         if($_SERVER["REQUEST_METHOD"]=="POST") {
             $email = $_POST['email'];
             $password = $_POST['password'];
 
             if(!empty($email) && !empty($password)) {
-                $email= $conn -> real_escape_string($email);
-                $sql="SELECT *FROM clients WHERE email= '$email'";
-                $result=$conn->query($sql);
+                $stmt = $db->prepare("SELECT * FROM clients WHERE email = ?");
+                if($stmt) {
+                    $stmt->bind_param("s", $email);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
 
-                if($result && $result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
+                    if($result && $result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
 
-                    if (password_verify($password, $row['password'])) { 
-                        if ($row["usertype"] == "user") {                       
-                            header("Location: index.php");  
-                            exit();
+                    if (password_verify($password, $row['password'])) {
+                    $_SESSION['user_id'] = $row['id'];
+                    $_SESSION['usertype'] = $row['usertype'];
 
-                        } elseif($row["usertype"] == "admin") {
-                            header("Location: newprod.php"); 
-                            exit();
-                        }
-                    } else {
-                        echo "Incorrect password.";
+                    if ($row["usertype"] == "user") {
+                        header("Location: index.php");
+                        exit();
+                    } elseif ($row["usertype"] == "admin") {
+                        header("Location: newprod.php");
+                        exit();
                     }
                 } else {
-                    echo "No user found with that email.";
+                    $error_message = "Incorrect password.";
                 }
             } else {
-                echo "Please fill in both email and password.";
+                $error_message = "No user found with that email.";
             }
+            $stmt->close();
+        } else {
+            $error_message = "Failed to prepare the query.";
         }
-        $conn -> close();
+    } else {
+        $error_message = "Please fill in both email and password.";
+    }
+}
+
+$db-> close();
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
