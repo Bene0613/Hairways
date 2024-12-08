@@ -1,38 +1,23 @@
 <?php
-        $conn = new mysqli("localhost","root","","hairrways");
-
-        if($_SERVER["REQUEST_METHOD"]=="POST") {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            if(!empty($email) && !empty($password)) {
-                $email= $conn -> real_escape_string($email);
-                $sql="SELECT *FROM clients WHERE email= '$email'";
-                $result=$conn->query($sql);
-
-                if($result && $result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-
-                    if (password_verify($password, $row['password'])) { 
-                        if ($row["usertype"] == "user") {                       
-                            header("Location: index.php");  
-                            exit();
-
-                        } elseif($row["usertype"] == "admin") {
-                            header("Location: newprod.php"); 
-                            exit();
-                        }
-                    } else {
-                        echo "Incorrect password.";
-                    }
-                } else {
-                    echo "No user found with that email.";
-                }
-            } else {
-                echo "Please fill in both email and password.";
-            }
-        }
-        $conn -> close();
+    if(!empty($_POST)){
+       $fname = $_POST['firstname'];
+       $lname = $_POST['lastname'];
+       $email = $_POST['email'];
+       $password = $_POST['password'];
+       $addr = $_POST['address'];
+       $options = [
+        'cost' => 14,
+    ];
+       $hash = password_hash($password, PASSWORD_DEFAULT, $options);
+       $conn = new mysqli("localhost","root","","hairrways");
+       $statement = $conn->prepare('INSERT INTO clients (first_name,last_name, email, password, address) VALUES (?,?,?,?,?)');
+       $statement-> bind_param('sssss', $fname, $lname, $email, $hash, $addr);
+       if($statement->execute()){
+            header('Location: index.php');
+       } else {
+        $error = true;
+       }
+    }
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <style>
-body {
+    body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,7 +42,7 @@ body {
 .wrap {
   background-color: white;
   width: 350px;
-  height: 300px;
+  height: 380px;
   border: 1px solid;
   padding: 10px;
   box-shadow: 5px 10px #D8BFD8;
@@ -97,6 +82,16 @@ button:hover {
  background-color: #D8BFD8;
 }
 
+.alert.hidden {
+font-size: smaller;
+display: none;
+}
+
+.alert {
+ color: #301934 ;
+ font-style: italic;
+}
+
 .more {
  font-size: smaller;
  text-align:center;
@@ -107,16 +102,28 @@ button:hover {
     <div class="wrap">
         <div class ="euhm">
             <form action="" method="POST">
-            <h2>Log in</h2>
+            <h2>Welcome</h2>
+                <div class= "text">
+                    <input type ="text" name="firstname" placeholder= "First name">
+                </div>
+                <div class= "text">
+                    <input type ="text" name="lastname" placeholder= "Last name">
+                </div>
                 <div class= "text">
                     <input type ="text" name="email" placeholder= "Email">
                 </div>
                 <div class= "text">
                     <input type ="password" name="password" placeholder= "Password">
                 </div>
-                <button type = "submit">Log in</button>
+                <div class= "text">
+                    <input type ="address" name="address" placeholder= "Full address">
+                </div>
+                <button type = "submit">Sign up</button>
+                <div class="alert <?php echo $error ? '': 'hidden'; ?>">
+                There is already an account linked to this email. Let’s try again!
+                </div>
                 <div class="more">
-                    <p>Don't have an account? <a href="sign.php">Sign Up </a></p>
+                    <p>Already have an account? <a href="login.php">Log in </a></p>
                 </div>
             </form>
         </div>
