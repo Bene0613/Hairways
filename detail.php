@@ -1,5 +1,4 @@
 <?php
-// Include the static data
 session_start();
 
 include_once('data.inc.php');
@@ -12,19 +11,16 @@ if (!isset($_GET['id'])) {
     exit("Product not found");
 }
 
-$id = $_GET['id']; // Get the ID from the query string
+$id = $_GET['id']; 
 
-// Establish a database connection
 $db = new Database("localhost", "root", "", "hairrways");
 
-// Check the database for the product
 $stmt = $db->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 $content = $result->fetch_assoc();
 
-// If the product is not found in the database, fall back to $collection
 if (!$content) {
     if (isset($collection[$id])) {
         $content = $collection[$id];
@@ -33,12 +29,12 @@ if (!$content) {
     }
 }
 
-// Handle form submission for adding to the cart
+
 if (isset($_POST['btnAdd'])) {
     $product_name = $_POST['product_name'];
-    $product_price = $_POST['product_price']; // Ensure price is a float
+    $product_price = $_POST['product_price']; 
     $product_image = $_POST['product_image'];
-    $product_quantity = $_POST['quantity']; // Ensure quantity is an integer
+    $product_quantity = $_POST['quantity']; 
 
     $stmt = $db->prepare("INSERT INTO cart (name, price, image, quantity) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("sdsi", $product_name, $product_price, $product_image, $product_quantity);
