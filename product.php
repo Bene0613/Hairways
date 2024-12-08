@@ -111,6 +111,7 @@
 
         .gg {
             display: flex;
+            flex-direction:column;
             justify-content: center;
             padding: 20px;
             gap: 20px;
@@ -279,7 +280,7 @@
                     <tr>
                         <td><?= htmlspecialchars($prod['name']); ?></td>
                         <td><?= htmlspecialchars($prod['description']); ?></td>
-                        <td>$<?= number_format($prod['price'], 2); ?></td>
+                        <td>€<?= number_format($prod['price'], 2); ?></td>
                         <td>
                             <a href="edit.php?id=<?= $prod['id']; ?>">Edit</a> | 
                             <a href="product.php?delete_id=<?= $prod['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
