@@ -3,12 +3,10 @@ session_start();
 include_once'./classes/database.php';
 $db = new Database("localhost", "root", "", "hairrways");
 
-// Handle Update Quantity
 if (isset($_POST['updatePrdQuanti'])) {
     $update_value = $_POST['updateQuantity'];
     $update_id = $_POST['updateQUantiId'];
 
-    // Update query
     $update_query = "UPDATE cart SET quantity=$update_value WHERE id=$update_id";
     if ($db->query($update_query)) {
         header('Location: cart.php');
@@ -16,14 +14,12 @@ if (isset($_POST['updatePrdQuanti'])) {
     }
 }
 
-// Handle Remove Item
 if (isset($_GET['remove'])) {
     $remove_id = $_GET['remove'];
     $remove_query = "DELETE FROM cart WHERE id=$remove_id";
     $db->query($remove_query);
 }
 
-// Handle Remove All Items
 if (isset($_GET['delete_all'])) {
     $db->query("DELETE FROM cart");
     header('Location: cart.php');
