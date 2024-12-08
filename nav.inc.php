@@ -130,6 +130,7 @@ if ($conn->connect_error) {
                 $row_count = mysqli_num_rows($select_prd);
             ?>
             <li><a href="cart.php"><i class="fa-solid fa-cart-shopping" style="color: #050505;"></i></a><span><sup><?php echo $row_count ?></sup></span></li>
+            <li><a href="logout.php" title="Logout"><i class="fa-solid fa-sign-out-alt" style="color: #050505;"></i></a></li>
         </ul>
     </div>
 </nav>
