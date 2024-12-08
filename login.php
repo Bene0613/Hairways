@@ -71,9 +71,9 @@ body {
   background-color: white;
   width: 350px;
   height: 300px;
-  border: 1px solid;
+  border: 1px solid #301934;
   padding: 10px;
-  box-shadow: 5px 10px #D8BFD8;
+  box-shadow: 5px 10px #301934;
   border-radius: 25px;
   padding: 20px;
 }
@@ -129,6 +129,7 @@ button:hover {
                 </div>
                 <button type = "submit">Log in</button>
                 <div class="more">
+                    <p>Forgotten password? <a href="newPW.php">Change it </a></p>
                     <p>Don't have an account? <a href="sign.php">Sign Up </a></p>
                 </div>
             </form>
